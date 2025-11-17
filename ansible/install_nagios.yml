@@ -1,0 +1,18 @@
+- name: Install Nagios on localhost
+  hosts: nagios
+  become: yes
+  tasks:
+    - name: Install dependencies
+      apt:
+        name:
+          - nagios4
+          - nagios-plugins
+          - apache2
+        state: present
+        update_cache: yes
+
+    - name: Ensure nagios is started
+      service:
+        name: nagios
+        state: started
+        enabled: yes
