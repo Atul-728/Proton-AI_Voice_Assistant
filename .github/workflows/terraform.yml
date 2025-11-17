@@ -33,3 +33,4 @@ jobs:
           TF_VAR_allowed_cidr: ${{ secrets.ALLOWED_CIDR }}
           TF_VAR_key_name: ${{ secrets.KEY_NAME }}
           TF_VAR_instance_type: "t3.large"
+        #   nothing just testing line added
