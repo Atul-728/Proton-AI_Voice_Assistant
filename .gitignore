@@ -1,0 +1,22 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual environment folder
+venv/
+.venv/
+
+# Sensitive keys and credentials
+.env
+
+# Temporary runtime data
+conversations/
+
+# Terraform
+**/.terraform/
+**/.terraform/*
+
+terraform.tfstate
+terraform.tfstate.backup
+*.tfstate
+*.tfstate.backup
