@@ -1,0 +1,43 @@
+name: Deploy Proton Infra
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  terraform:
+    name: Apply Terraform & Configure Nagios
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Setup AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: us-east-1
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
+
+      - name: Get Nagios IP
+        id: nagios_ip
+        run: |
+          IP=$(terraform output -raw nagios_ip)
+          echo "ip=$IP" >> $GITHUB_OUTPUT
+
+      - name: Run Ansible Playbook on Nagios Server
+        uses: dawidd6/action-ansible-playbook@v2
+        with:
+          playbook: ansible/install_nagios.yml
+          inventory: ansible/hosts.ini
+          key: ${{ secrets.SSH_KEY }}
